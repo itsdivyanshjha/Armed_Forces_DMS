@@ -1,0 +1,591 @@
+/* Armed Forces Command Center - Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #0A0E14;
+  color: #E8E9EA;
+  overflow-x: hidden;
+}
+
+code {
+  font-family: 'Fira Code', 'Monaco', 'Consolas', 'Courier New', monospace;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1A1E23;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2A3142;
+  border-radius: 4px;
+  border: 1px solid #1A1E23;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFD700;
+}
+
+/* Ant Design Overrides */
+.ant-layout {
+  background: #0A0E14 !important;
+}
+
+.ant-card {
+  background: #1A1E23 !important;
+  border: 1px solid #2A3142 !important;
+  color: #E8E9EA !important;
+}
+
+.ant-card-head {
+  background: rgba(27, 67, 50, 0.3) !important;
+  border-bottom: 1px solid #2A3142 !important;
+  color: #FFD700 !important;
+}
+
+.ant-card-head-title {
+  color: #FFD700 !important;
+}
+
+.ant-card-body {
+  background: transparent !important;
+  color: #E8E9EA !important;
+}
+
+.ant-btn {
+  background: linear-gradient(135deg, #1B4332 0%, #2D5016 100%) !important;
+  border: 1px solid #FFD700 !important;
+  color: #FFD700 !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+.ant-btn:hover,
+.ant-btn:focus {
+  background: #FFD700 !important;
+  color: #1B4332 !important;
+  border-color: #FFD700 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+.ant-input {
+  background: #0A0E14 !important;
+  border: 1px solid #2A3142 !important;
+  color: #E8E9EA !important;
+}
+
+.ant-input:focus,
+.ant-input:hover {
+  border-color: #FFD700 !important;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2) !important;
+}
+
+.ant-select {
+  color: #E8E9EA !important;
+}
+
+.ant-select-selector {
+  background: #0A0E14 !important;
+  border: 1px solid #2A3142 !important;
+  color: #E8E9EA !important;
+}
+
+.ant-select-dropdown {
+  background: #1A1E23 !important;
+  border: 1px solid #2A3142 !important;
+}
+
+.ant-select-item {
+  color: #E8E9EA !important;
+}
+
+.ant-select-item:hover {
+  background: rgba(255, 215, 0, 0.1) !important;
+}
+
+.ant-select-item-option-selected {
+  background: rgba(255, 215, 0, 0.2) !important;
+  color: #FFD700 !important;
+}
+
+.ant-table {
+  background: #1A1E23 !important;
+  color: #E8E9EA !important;
+}
+
+.ant-table-thead > tr > th {
+  background: rgba(27, 67, 50, 0.3) !important;
+  color: #FFD700 !important;
+  border-bottom: 1px solid #2A3142 !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+.ant-table-tbody > tr > td {
+  background: #1A1E23 !important;
+  color: #E8E9EA !important;
+  border-bottom: 1px solid #2A3142 !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: rgba(255, 215, 0, 0.05) !important;
+}
+
+.ant-statistic {
+  color: #E8E9EA !important;
+}
+
+.ant-statistic-title {
+  color: #B0B6C1 !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  font-weight: 500 !important;
+}
+
+.ant-statistic-content {
+  color: #E8E9EA !important;
+  font-weight: 700 !important;
+}
+
+.ant-tag {
+  background: #0A0E14 !important;
+  color: #B0B6C1 !important;
+  border: 1px solid #2A3142 !important;
+}
+
+.ant-tag:hover {
+  background: rgba(255, 215, 0, 0.1) !important;
+  border-color: #FFD700 !important;
+  color: #FFD700 !important;
+}
+
+.ant-alert {
+  background: rgba(243, 156, 18, 0.15) !important;
+  border: 1px solid #F39C12 !important;
+  color: #E8E9EA !important;
+}
+
+.ant-alert-warning {
+  background: rgba(243, 156, 18, 0.15) !important;
+  border-color: #F39C12 !important;
+}
+
+.ant-alert-success {
+  background: rgba(39, 174, 96, 0.15) !important;
+  border-color: #27AE60 !important;
+}
+
+.ant-alert-error {
+  background: rgba(231, 76, 60, 0.15) !important;
+  border-color: #E74C3C !important;
+}
+
+.ant-notification {
+  background: #1A1E23 !important;
+  border: 1px solid #2A3142 !important;
+  color: #E8E9EA !important;
+}
+
+.ant-notification-notice-message {
+  color: #FFD700 !important;
+  font-weight: 600 !important;
+}
+
+.ant-notification-notice-description {
+  color: #E8E9EA !important;
+}
+
+.ant-spin-dot-item {
+  background: #FFD700 !important;
+}
+
+.ant-modal {
+  color: #E8E9EA !important;
+}
+
+.ant-modal-content {
+  background: #1A1E23 !important;
+  border: 1px solid #2A3142 !important;
+}
+
+.ant-modal-header {
+  background: rgba(27, 67, 50, 0.3) !important;
+  border-bottom: 1px solid #2A3142 !important;
+}
+
+.ant-modal-title {
+  color: #FFD700 !important;
+}
+
+.ant-modal-body {
+  background: #1A1E23 !important;
+  color: #E8E9EA !important;
+}
+
+/* Header Navigation Improvements */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-text h1 {
+  color: #FFD700 !important;
+  margin: 0 !important;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.5px !important;
+  line-height: 1.2 !important;
+}
+
+.logo-text .subtitle {
+  color: #B0B6C1 !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  display: block !important;
+  margin-top: 2px !important;
+}
+
+.nav-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+}
+
+.nav-button {
+  background: transparent !important;
+  color: #FFD700 !important;
+  border: 1px solid #FFD700 !important;
+  padding: 10px 16px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+  transition: all 0.3s ease !important;
+  min-height: 40px !important;
+}
+
+.nav-button:hover {
+  background: rgba(255, 215, 0, 0.1) !important;
+  border-color: #FFD700 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2) !important;
+}
+
+.nav-button.active {
+  background: #FFD700 !important;
+  color: #1B4332 !important;
+  border-color: #FFD700 !important;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3) !important;
+}
+
+.nav-button.active:hover {
+  background: #FFD700 !important;
+  transform: none !important;
+}
+
+.nav-label {
+  white-space: nowrap !important;
+}
+
+@media (max-width: 1200px) {
+  .nav-label {
+    display: none !important;
+  }
+  
+  .nav-button {
+    padding: 10px 12px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-text h1 {
+    font-size: 18px !important;
+  }
+  
+  .nav-actions {
+    gap: 8px !important;
+  }
+  
+  .nav-button {
+    padding: 8px 10px !important;
+    min-height: 36px !important;
+  }
+}
+
+/* Custom Military Elements */
+.military-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.command-status {
+  background: linear-gradient(135deg, #1B4332 0%, #2D5016 100%);
+  border: 2px solid #FFD700;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.classification-banner {
+  background: #E74C3C;
+  color: white;
+  text-align: center;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}
+
+.chart-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: #FFD700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.metrics-animation {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced Professional Animations */
+.command-card-enter {
+  animation: slideInFromLeft 0.5s ease-out;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.metric-value {
+  animation: countUp 1.2s ease-out;
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Professional Status Indicators */
+.status-indicator {
+  position: relative;
+  overflow: hidden;
+}
+
+.status-indicator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Military Grid Enhancements */
+.military-command-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  padding: 24px 0;
+}
+
+.military-command-grid .ant-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-left: 3px solid transparent;
+}
+
+.military-command-grid .ant-card:hover {
+  transform: translateY(-4px);
+  border-left-color: #FFD700;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Enhanced Loading States */
+.military-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #FFD700;
+}
+
+.military-loading .loading-icon {
+  font-size: 48px;
+  animation: militaryPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes militaryPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.chart-container-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s ease;
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .military-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ant-card {
+    margin-bottom: 16px;
+  }
+  
+  .chart-wrapper {
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .ant-col {
+    margin-bottom: 16px;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .ant-card {
+    border: 1px solid #ccc !important;
+    background: white !important;
+  }
+  
+  .chart-container {
+    break-inside: avoid;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .ant-card {
+    border: 2px solid #FFD700 !important;
+  }
+  
+  .ant-btn {
+    border: 2px solid #FFD700 !important;
+  }
+}
