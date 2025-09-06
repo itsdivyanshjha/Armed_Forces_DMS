@@ -46,7 +46,7 @@ const ChatInterface = ({ datasets, processedData }) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages.length]);
 
   useEffect(() => {
     // Check Ollama connection and add welcome message
