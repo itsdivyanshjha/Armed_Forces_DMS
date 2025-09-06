@@ -65,7 +65,8 @@ dist
 
 # Gatsby files
 .cache/
-public
+# Keep public for CRA build
+# public
 
 # Storybook build outputs
 .out
