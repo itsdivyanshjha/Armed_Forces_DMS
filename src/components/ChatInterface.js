@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Input, Button, Card, Tag, Spin, notification } from 'antd';
+import { Input, Button, Card, Tag, Spin, notification, Row, Col } from 'antd';
 import { SendOutlined, RobotOutlined, UserOutlined, WifiOutlined, DisconnectOutlined } from '@ant-design/icons';
 import { ollamaService } from '../services/ollamaService';
 import { 
@@ -11,6 +11,7 @@ import {
   CommandCard,
   MilitaryButton 
 } from './StyledComponents';
+import ChatVisualizations from './ChatVisualizations';
 import { ArmedForcesTheme } from '../styles/theme';
 
 const { TextArea } = Input;
@@ -22,16 +23,26 @@ const ChatInterface = ({ datasets, processedData }) => {
   const [ollamaConnected, setOllamaConnected] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const sampleQueries = [
-    "Show me Army recruitment trends from 2017 to 2022",
-    "Compare India's defense exports growth over the last 8 years", 
-    "What's the breakdown of defense budget allocation by cluster?",
-    "How does India's military expenditure compare to Pakistan?",
-    "Analyze defense production trends and self-reliance progress",
-    "Show conflict escalation patterns between India and Pakistan",
-    "Compare India's armed forces with global military powers",
-    "Generate a comprehensive defense export performance report"
-  ];
+  const strategicQueries = {
+    "Financial Intelligence": [
+      "Analyze defense budget allocation trends and growth patterns",
+      "Compare India's defense exports performance with global competitors",
+      "Show military expenditure ratio between India and Pakistan over time",
+      "Generate financial efficiency report for defense spending"
+    ],
+    "Strategic Assessment": [
+      "Evaluate current security threat levels and conflict patterns",
+      "Compare India's global military ranking and capabilities",
+      "Analyze Indo-Pak military balance and strategic implications",
+      "Assess defense production capacity and self-reliance metrics"
+    ],
+    "Operational Intelligence": [
+      "Show defense export destinations and market penetration",
+      "Analyze budget cluster allocation for strategic planning",
+      "Compare global armed forces strength and positioning",
+      "Generate comprehensive defense readiness assessment"
+    ]
+  };
 
   useEffect(() => {
     scrollToBottom();
@@ -47,23 +58,16 @@ const ChatInterface = ({ datasets, processedData }) => {
         setMessages([{
           id: 1,
           type: 'ai',
-          content: `**ARMED FORCES COMMAND CENTER - AI ANALYST ACTIVATED**
+          content: `**🇮🇳 MILITARY AI ANALYST - OPERATIONAL**
 
-🎯 **System Status:** ${connected ? 'Llama 3.1 Online' : 'Offline Mode - Demo Responses Active'}
-🔐 **Classification:** FOR OFFICIAL USE ONLY
-🇮🇳 **Jurisdiction:** Indian Armed Forces Intelligence Division
+**STATUS:** ${connected ? '🟢 Llama 3.1 Online' : '🟡 Offline Mode Active'} | **SECURITY:** FOR OFFICIAL USE ONLY
 
-**Available Defense Analytics:**
-• Personnel & Recruitment Intelligence
-• Defense Export Performance Analysis  
-• Budget Allocation & Financial Intelligence
-• Strategic Threat Assessment
-• Global Military Positioning
-• Indo-Pak Regional Analysis
+**AVAILABLE INTELLIGENCE MODULES:**
+• 📊 Financial Intelligence: Budget analysis, export performance, expenditure trends
+• ⚡ Strategic Assessment: Threat evaluation, conflict analysis, military balance
+• 🌐 Operational Intelligence: Defense readiness, global comparisons, market analysis
 
-**Instructions:** Submit your intelligence queries using natural language. All responses are generated for strategic planning and operational decision-making.
-
-Ready to assist with defense intelligence analysis.`,
+**READY FOR ANALYSIS** - Submit queries using suggestions above or type custom requests.`,
           timestamp: new Date()
         }]);
       }
@@ -171,7 +175,11 @@ Based on your query: "${query}"
         id: Date.now() + 1,
         type: 'ai',
         content: aiResponse,
-        timestamp: new Date()
+        timestamp: new Date(),
+        visualization: relevantData && Object.keys(relevantData).length > 0 ? {
+          query: inputValue.trim(),
+          data: relevantData
+        } : null
       };
 
       setMessages(prev => [...prev, aiMessage]);
@@ -248,50 +256,74 @@ Based on your query: "${query}"
 
   return (
     <div>
-      {/* Sample Queries */}
-      <CommandCard style={{ marginBottom: 24 }}>
-        <h3 style={{ color: ArmedForcesTheme.colors.accent, marginBottom: 16 }}>
-          STRATEGIC ANALYSIS QUERIES
-        </h3>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          {sampleQueries.map((query, index) => (
-            <Tag
-              key={index}
-              style={{
-                background: ArmedForcesTheme.colors.background,
-                color: ArmedForcesTheme.colors.textSecondary,
-                border: `1px solid ${ArmedForcesTheme.colors.border}`,
-                cursor: 'pointer',
-                padding: '4px 8px',
-                fontSize: '12px'
-              }}
-              onClick={() => handleSampleQuery(query)}
-            >
-              {query}
-            </Tag>
-          ))}
-        </div>
+      {/* Simplified Query Suggestions */}
+      <CommandCard style={{ marginBottom: 16 }}>
+        <Row gutter={[8, 8]}>
+          <Col span={24}>
+            <h4 style={{ 
+              color: ArmedForcesTheme.colors.accent, 
+              marginBottom: 8,
+              fontSize: '12px',
+              fontWeight: 'bold'
+            }}>
+              🎯 QUICK ANALYSIS QUERIES
+            </h4>
+          </Col>
+          {Object.entries(strategicQueries).map(([category, queries]) => 
+            queries.slice(0, 2).map((query, index) => (
+              <Col xs={12} md={8} lg={6} key={`${category}-${index}`}>
+                <div
+                  style={{
+                    background: ArmedForcesTheme.colors.background,
+                    color: ArmedForcesTheme.colors.textSecondary,
+                    border: `1px solid ${ArmedForcesTheme.colors.border}`,
+                    borderRadius: '4px',
+                    padding: '6px 8px',
+                    cursor: 'pointer',
+                    fontSize: '10px',
+                    lineHeight: '1.2',
+                    transition: 'all 0.2s ease',
+                    textAlign: 'center'
+                  }}
+                  onClick={() => handleSampleQuery(query)}
+                  onMouseEnter={(e) => {
+                    e.target.style.borderColor = ArmedForcesTheme.colors.accent;
+                    e.target.style.background = `${ArmedForcesTheme.colors.accent}15`;
+                    e.target.style.color = ArmedForcesTheme.colors.text;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.borderColor = ArmedForcesTheme.colors.border;
+                    e.target.style.background = ArmedForcesTheme.colors.background;
+                    e.target.style.color = ArmedForcesTheme.colors.textSecondary;
+                  }}
+                >
+                  {query.length > 50 ? query.substring(0, 47) + '...' : query}
+                </div>
+              </Col>
+            ))
+          )}
+        </Row>
       </CommandCard>
 
       {/* Chat Interface */}
       <ChatContainer>
         <ChatHeader>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <RobotOutlined style={{ fontSize: 20 }} />
-            <h3>Military AI Analyst</h3>
+            <RobotOutlined style={{ fontSize: 16 }} />
+            <h4 style={{ margin: 0, fontSize: '14px' }}>Military AI Analyst</h4>
             <div style={{
               display: 'flex',
               alignItems: 'center',
               gap: 4,
               background: ollamaConnected ? 'rgba(39, 174, 96, 0.2)' : 'rgba(243, 156, 18, 0.2)',
               color: ollamaConnected ? ArmedForcesTheme.colors.success : ArmedForcesTheme.colors.warning,
-              padding: '2px 8px',
-              borderRadius: '12px',
-              fontSize: '10px',
+              padding: '2px 6px',
+              borderRadius: '8px',
+              fontSize: '9px',
               fontWeight: 'bold'
             }}>
               {ollamaConnected ? <WifiOutlined /> : <DisconnectOutlined />}
-              {ollamaConnected ? 'LLAMA 3.1 ONLINE' : 'OFFLINE MODE'}
+              {ollamaConnected ? 'ONLINE' : 'OFFLINE'}
             </div>
           </div>
         </ChatHeader>
@@ -315,6 +347,12 @@ Based on your query: "${query}"
                     message.content
                   }
                 </div>
+                {message.visualization && (
+                  <ChatVisualizations 
+                    query={message.visualization.query}
+                    data={message.visualization.data}
+                  />
+                )}
               </div>
             </Message>
           ))}

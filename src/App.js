@@ -3,8 +3,6 @@ import { ConfigProvider, Spin, notification } from 'antd';
 import { 
   DashboardOutlined, 
   MessageOutlined, 
-  BarChartOutlined,
-  TeamOutlined,
   DollarOutlined,
   GlobalOutlined 
 } from '@ant-design/icons';
@@ -19,7 +17,6 @@ import { dataLoader } from './services/dataLoader';
 import DataProcessors from './services/dataProcessors';
 import Dashboard from './components/Dashboard';
 import ChatInterface from './components/ChatInterface';
-import PersonnelAnalytics from './components/PersonnelAnalytics';
 import FinancialAnalytics from './components/FinancialAnalytics';
 import StrategicAnalytics from './components/StrategicAnalytics';
 import './styles/App.css';
@@ -86,13 +83,6 @@ function App() {
             processedData={processedData}
           />
         );
-      case 'personnel':
-        return (
-          <PersonnelAnalytics 
-            data={processedData.armyRecruits}
-            rawData={datasets.armyRecruits20172022}
-          />
-        );
       case 'financial':
         return (
           <FinancialAnalytics 
@@ -117,7 +107,6 @@ function App() {
   const navigationItems = [
     { key: 'dashboard', label: 'Command Dashboard', icon: <DashboardOutlined /> },
     { key: 'chat', label: 'AI Intelligence', icon: <MessageOutlined /> },
-    { key: 'personnel', label: 'Personnel Analytics', icon: <TeamOutlined /> },
     { key: 'financial', label: 'Financial Intelligence', icon: <DollarOutlined /> },
     { key: 'strategic', label: 'Strategic Analysis', icon: <GlobalOutlined /> }
   ];

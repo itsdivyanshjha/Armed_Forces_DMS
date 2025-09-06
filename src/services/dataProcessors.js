@@ -29,27 +29,39 @@ export class DataProcessors {
     if (!data || data.length === 0) return null;
 
     try {
+      // Get year columns
+      const yearColumns = ['RtgYr - 2017-18', 'RtgYr - 2018-19', 'RtgYr - 2019-20', 'RtgYr - 2020-21', 'RtgYr - 2021-22'];
+      
       // Calculate yearly trends
-      const yearlyTrends = _(data)
-        .filter(row => row.Year && row.Recruits)
-        .groupBy('Year')
-        .map((yearData, year) => ({
-          year: parseInt(year),
-          totalRecruits: _.sumBy(yearData, row => this.parseNumber(row.Recruits)),
-          recordCount: yearData.length
-        }))
-        .orderBy('year')
-        .value();
+      const yearlyTrends = yearColumns.map(yearCol => {
+        const year = parseInt(yearCol.split(' - ')[1].split('-')[0]);
+        const totalRecruits = _.sumBy(data, row => {
+          const value = row[yearCol];
+          return (value && value !== 'NA') ? this.parseNumber(value) : 0;
+        });
+        return {
+          year,
+          totalRecruits,
+          recordCount: data.filter(row => row[yearCol] && row[yearCol] !== 'NA').length
+        };
+      }).filter(item => item.totalRecruits > 0);
 
-      // Regional breakdown if region data exists
+      // Regional breakdown
       const regionalBreakdown = _(data)
-        .filter(row => row.Region || row.State)
-        .groupBy(row => row.Region || row.State || 'Unknown')
-        .map((regionData, region) => ({
-          region,
-          totalRecruits: _.sumBy(regionData, row => this.parseNumber(row.Recruits)),
-          percentage: 0 // Will calculate after total
-        }))
+        .filter(row => row['State/UTs'])
+        .map(row => {
+          const state = row['State/UTs'];
+          const totalRecruits = _.sum(yearColumns.map(col => {
+            const value = row[col];
+            return (value && value !== 'NA') ? this.parseNumber(value) : 0;
+          }));
+          return {
+            region: state,
+            totalRecruits,
+            percentage: 0 // Will calculate after total
+          };
+        })
+        .filter(item => item.totalRecruits > 0)
         .orderBy('totalRecruits', 'desc')
         .value();
 
@@ -93,11 +105,11 @@ export class DataProcessors {
     try {
       // Export trends over time
       const exportTrends = _(data)
-        .filter(row => row.Year && (row.Export_Value || row.Value))
+        .filter(row => row.Year && row['Total Export (Rs Cr)'])
         .groupBy('Year')
         .map((yearData, year) => ({
           year: parseInt(year),
-          totalValue: _.sumBy(yearData, row => this.parseNumber(row.Export_Value || row.Value)),
+          totalValue: _.sumBy(yearData, row => this.parseNumber(row['Total Export (Rs Cr)'])),
           recordCount: yearData.length
         }))
         .orderBy('year')
@@ -152,32 +164,15 @@ export class DataProcessors {
     try {
       // Budget allocations over time
       const allocations = _(data)
-        .filter(row => row.Year && (row.Budget || row.Allocation))
+        .filter(row => row.Year && row['Annual Defence Budget (in Cr)'])
         .map(row => ({
           year: this.parseYear(row.Year),
-          budget: this.parseNumber(row.Budget || row.Allocation),
-          category: row.Category || row.Department || 'General'
+          totalBudget: this.parseNumber(row['Annual Defence Budget (in Cr)']),
+          rdBudget: this.parseNumber(row['Defence R&D Budget (in Cr)']),
+          rdPercentage: this.parseNumber(row['Percentage of DRDO Budget to Defence Outlay'])
         }))
         .filter(row => row.year)
-        .groupBy('year')
-        .map((yearData, year) => ({
-          year: parseInt(year),
-          totalBudget: _.sumBy(yearData, 'budget'),
-          categories: yearData
-        }))
         .orderBy('year')
-        .value();
-
-      // Category-wise breakdown
-      const categoryBreakdown = _(data)
-        .filter(row => (row.Category || row.Department) && (row.Budget || row.Allocation))
-        .groupBy(row => row.Category || row.Department)
-        .map((categoryData, category) => ({
-          category,
-          totalBudget: _.sumBy(categoryData, row => this.parseNumber(row.Budget || row.Allocation)),
-          years: categoryData.length
-        }))
-        .orderBy('totalBudget', 'desc')
         .value();
 
       // Trend analysis
@@ -192,13 +187,13 @@ export class DataProcessors {
 
       return {
         allocations,
-        categoryBreakdown,
         trends,
         summary: {
           totalBudget: _.sumBy(allocations, 'totalBudget'),
           averageGrowthRate: _.meanBy(trends, 'growthRate'),
           peakBudgetYear: _.maxBy(allocations, 'totalBudget')?.year,
-          totalCategories: categoryBreakdown.length
+          latestBudget: _.last(allocations)?.totalBudget,
+          latestYear: _.last(allocations)?.year
         }
       };
     } catch (error) {
@@ -214,13 +209,14 @@ export class DataProcessors {
     try {
       // Timeline analysis
       const timelineAnalysis = _(data)
-        .filter(row => row.Date && row.Incident_Type)
+        .filter(row => row.Date && row['Event Type'])
         .map(row => ({
           date: row.Date,
           year: this.parseYear(row.Date),
-          incidentType: row.Incident_Type,
-          severity: row.Severity || row.Level || 'Medium',
-          location: row.Location || 'Unknown'
+          eventType: row['Event Type'],
+          escalationLevel: this.parseNumber(row['Escalation Level']),
+          location: row.Location || 'Unknown',
+          event: row['Event Description']
         }))
         .filter(row => row.year)
         .value();
@@ -231,18 +227,19 @@ export class DataProcessors {
         .map((yearData, year) => ({
           year: parseInt(year),
           totalIncidents: yearData.length,
-          severityBreakdown: _.countBy(yearData, 'severity'),
+          averageEscalation: _.meanBy(yearData, 'escalationLevel'),
+          eventTypeBreakdown: _.countBy(yearData, 'eventType'),
           locationBreakdown: _.countBy(yearData, 'location')
         }))
         .orderBy('year')
         .value();
 
-      // Severity trends
+      // Event type trends
       const severityTrends = _(timelineAnalysis)
-        .groupBy('severity')
-        .map((severityData, severity) => ({
-          severity,
-          count: severityData.length,
+        .groupBy('eventType')
+        .map((eventData, eventType) => ({
+          severity: eventType,
+          count: eventData.length,
           percentage: 0 // Will calculate after total
         }))
         .value();
@@ -279,10 +276,11 @@ export class DataProcessors {
         .filter(row => row.Country)
         .map(row => ({
           country: row.Country,
-          activePersonnel: this.parseNumber(row.Active_Personnel || row.Personnel),
-          defense_budget: this.parseNumber(row.Defense_Budget || row.Budget),
-          militaryStrength: this.parseNumber(row.Military_Strength || row.Strength),
-          rank: this.parseNumber(row.Rank || row.Global_Rank)
+          activePersonnel: this.parseNumber(row['Active military']),
+          reservePersonnel: this.parseNumber(row['Reserve military']),
+          totalPersonnel: this.parseNumber(row.Total),
+          rank: this.parseNumber(row['SR.NO']),
+          militaryStrength: this.parseNumber(row.Total) // Use total as strength indicator
         }))
         .orderBy('rank')
         .value();
