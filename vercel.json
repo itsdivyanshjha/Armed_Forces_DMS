@@ -20,5 +20,9 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  "env": {
+    "GENERATE_SOURCEMAP": "false",
+    "CI": "false"
+  }
 }
