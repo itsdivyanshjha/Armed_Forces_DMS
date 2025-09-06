@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Input, Button, Card, Tag, Spin, notification, Row, Col } from 'antd';
+import { Input, Spin, notification, Row, Col } from 'antd';
 import { SendOutlined, RobotOutlined, UserOutlined, WifiOutlined, DisconnectOutlined } from '@ant-design/icons';
 import { ollamaService } from '../services/ollamaService';
 import { 

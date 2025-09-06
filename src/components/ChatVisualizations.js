@@ -1,21 +1,13 @@
 import React from 'react';
-import { Row, Col, Table, Statistic, Card } from 'antd';
+import { Row, Col, Statistic, Card } from 'antd';
 import { 
-  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area,
+  LineChart, Line, BarChart, Bar, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
 import { ArmedForcesTheme } from '../styles/theme';
 import { ChartContainer } from './StyledComponents';
 
 const ChatVisualizations = ({ query, data, type = 'auto' }) => {
-  const chartColors = [
-    ArmedForcesTheme.colors.accent,
-    ArmedForcesTheme.colors.success,
-    ArmedForcesTheme.colors.warning,
-    ArmedForcesTheme.colors.navy,
-    ArmedForcesTheme.colors.airforce,
-    ArmedForcesTheme.colors.danger
-  ];
 
   const formatCurrency = (value) => {
     if (value >= 1e9) return `₹${(value / 1e9).toFixed(1)}B`;

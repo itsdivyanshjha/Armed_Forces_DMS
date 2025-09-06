@@ -55,9 +55,13 @@ Intelligence Hub/
 └── OLLAMA_SETUP.md        # AI setup instructions
 ```
 
-## 🚀 Setup
+## 🚀 Local Development Setup
 
 ```bash
+# Clone repository
+git clone <your-repo-url>
+cd armed-forces-dms
+
 # Install dependencies
 npm install
 
@@ -68,11 +72,82 @@ npm start
 http://localhost:3000
 ```
 
+### AI Setup (Optional - for local development)
 For AI capabilities, install Ollama and run:
 ```bash
 ollama pull llama3.1:latest
 ollama serve
 ```
+
+## 🌐 Vercel Deployment
+
+### Prerequisites
+1. GitHub repository with your code
+2. Vercel account (free tier available)
+
+### Deployment Steps
+
+#### Method 1: Vercel Dashboard (Recommended)
+1. **Connect Repository**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "New Project"
+   - Import your GitHub repository
+
+2. **Configure Build Settings**
+   - Framework Preset: `Create React App`
+   - Build Command: `npm run vercel-build`
+   - Output Directory: `build`
+   - Install Command: `npm install`
+
+3. **Environment Variables** (Optional)
+   - Add in Vercel dashboard under "Environment Variables":
+   ```
+   REACT_APP_APP_NAME=Armed Forces Intelligence Hub
+   GENERATE_SOURCEMAP=false
+   CI=false
+   ```
+
+4. **Deploy**
+   - Click "Deploy"
+   - Wait 2-3 minutes for build completion
+   - Your app will be live at `https://your-project-name.vercel.app`
+
+#### Method 2: Vercel CLI
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy from project root
+vercel
+
+# Follow prompts:
+# - Link to existing project or create new
+# - Confirm settings
+# - Deploy
+```
+
+### Production Features
+- ✅ **Datasets**: All CSV/Excel files automatically served from `/public/datasets/`
+- ✅ **Visualizations**: All charts and analytics work without backend
+- ✅ **AI Chat**: Uses intelligent fallback responses (no Ollama server needed)
+- ✅ **Responsive**: Optimized for desktop and mobile viewing
+- ✅ **Performance**: Optimized build with caching headers
+- ✅ **Security**: Proper headers and CORS configuration
+
+### Post-Deployment
+1. **Test All Features**
+   - Command Dashboard visualizations
+   - Financial and Strategic Analytics
+   - AI Intelligence chat with sample queries
+   - All navigation and responsive design
+
+2. **Custom Domain** (Optional)
+   - Add custom domain in Vercel dashboard
+   - Configure DNS records as instructed
+
+3. **Share with Team**
+   - Send Vercel URL to developers/clients
+   - All features work immediately without setup
 
 ## 🎯 Demo Scenarios
 

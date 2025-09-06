@@ -1,11 +1,22 @@
 class OllamaService {
   constructor() {
-    this.baseUrl = 'http://localhost:11434'; // Default Ollama server URL
-    this.model = 'llama3.1:latest';
+    // Use environment variable for production deployment
+    this.baseUrl = process.env.REACT_APP_OLLAMA_URL || 'http://localhost:11434';
+    this.model = process.env.REACT_APP_OLLAMA_MODEL || 'llama3.1:latest';
+    this.isProduction = process.env.NODE_ENV === 'production';
   }
 
   async generateResponse(prompt, context = {}) {
+    // In production, use fallback responses for demo purposes
+    if (this.isProduction) {
+      console.log('Production mode: Using fallback AI responses');
+      return this.generateFallbackResponse(prompt, context);
+    }
+
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
       const response = await fetch(`${this.baseUrl}/api/generate`, {
         method: 'POST',
         headers: {
@@ -20,8 +31,11 @@ class OllamaService {
             top_p: 0.9,
             max_tokens: 1024
           }
-        })
+        }),
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`Ollama API error: ${response.status} ${response.statusText}`);
@@ -148,8 +162,20 @@ All major defense parameters indicate stable operational readiness with positive
   }
 
   async checkServerStatus() {
+    // In production, always return false to show offline mode
+    if (this.isProduction) {
+      return false;
+    }
+
     try {
-      const response = await fetch(`${this.baseUrl}/api/tags`);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+      
+      const response = await fetch(`${this.baseUrl}/api/tags`, {
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
       return response.ok;
     } catch (error) {
       return false;

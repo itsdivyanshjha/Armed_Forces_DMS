@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "name": "armed-forces-dms",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/datasets/(.*)",
+      "dest": "/datasets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "functions": {
+    "src/index.js": {
+      "memory": 1024
+    }
+  },
+  "env": {
+    "NODE_ENV": "production",
+    "GENERATE_SOURCEMAP": "false"
+  }
+}
