@@ -29,8 +29,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
-  ComposedChart,
   Area,
   AreaChart
 } from 'recharts';
@@ -236,17 +234,24 @@ const Dashboard = ({ datasets, processedData }) => {
           </ChartContainer>
         )}
 
-        {/* Military Expenditure Comparison */}
-        {processedData.militaryExpenditure?.expenditureTrends && (
+        {/* Military Personnel Comparison - Different from Financial Intelligence */}
+        {processedData.globalComparison?.countryRankings && (
           <ChartContainer>
-            <div className="chart-title">India vs Pakistan Military Expenditure</div>
+            <div className="chart-title">Top Military Personnel by Country</div>
             <div className="chart-wrapper">
               <ResponsiveContainer width="100%" height={300}>
-                <ComposedChart data={processedData.militaryExpenditure.expenditureTrends.slice(-20)}>
+                <BarChart 
+                  data={processedData.globalComparison.countryRankings.slice(0, 8)}
+                  layout="horizontal"
+                >
                   <CartesianGrid strokeDasharray="3 3" stroke={ArmedForcesTheme.colors.border} />
-                  <XAxis dataKey="year" stroke={ArmedForcesTheme.colors.textSecondary} />
-                  <YAxis stroke={ArmedForcesTheme.colors.textSecondary} />
-                  <YAxis yAxisId="ratio" orientation="right" stroke={ArmedForcesTheme.colors.success} />
+                  <XAxis type="number" stroke={ArmedForcesTheme.colors.textSecondary} />
+                  <YAxis 
+                    dataKey="country" 
+                    type="category" 
+                    stroke={ArmedForcesTheme.colors.textSecondary}
+                    width={80}
+                  />
                   <Tooltip 
                     contentStyle={{
                       backgroundColor: ArmedForcesTheme.colors.surface,
@@ -254,19 +259,14 @@ const Dashboard = ({ datasets, processedData }) => {
                       borderRadius: '8px',
                       color: ArmedForcesTheme.colors.text
                     }}
+                    formatter={(value) => [value.toLocaleString(), 'Personnel']}
                   />
-                  <Legend />
-                  <Bar dataKey="india" fill={ArmedForcesTheme.colors.accent} name="India" />
-                  <Bar dataKey="pakistan" fill={ArmedForcesTheme.colors.warning} name="Pakistan" />
-                  <Line 
-                    type="monotone" 
-                    dataKey="ratio" 
-                    stroke={ArmedForcesTheme.colors.success}
-                    strokeWidth={2}
-                    name="India/Pakistan Ratio"
-                    yAxisId="ratio"
+                  <Bar 
+                    dataKey="totalPersonnel" 
+                    fill={ArmedForcesTheme.colors.navy}
+                    radius={[0, 4, 4, 0]}
                   />
-                </ComposedChart>
+                </BarChart>
               </ResponsiveContainer>
             </div>
           </ChartContainer>
@@ -303,24 +303,16 @@ const Dashboard = ({ datasets, processedData }) => {
           </ChartContainer>
         )}
 
-        {/* Country-wise Defense Exports */}
-        {processedData.defenseExports?.countryWiseExports && (
+        {/* Defense Export Trends - Different from Financial Intelligence */}
+        {processedData.defenseExports?.exportTrends && (
           <ChartContainer>
-            <div className="chart-title">Top Defense Export Destinations</div>
+            <div className="chart-title">Defense Export Growth Trends</div>
             <div className="chart-wrapper">
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart 
-                  data={processedData.defenseExports.countryWiseExports.slice(0, 8)}
-                  layout="horizontal"
-                >
+                <LineChart data={processedData.defenseExports.exportTrends}>
                   <CartesianGrid strokeDasharray="3 3" stroke={ArmedForcesTheme.colors.border} />
-                  <XAxis type="number" stroke={ArmedForcesTheme.colors.textSecondary} />
-                  <YAxis 
-                    dataKey="country" 
-                    type="category" 
-                    stroke={ArmedForcesTheme.colors.textSecondary}
-                    width={100}
-                  />
+                  <XAxis dataKey="year" stroke={ArmedForcesTheme.colors.textSecondary} />
+                  <YAxis stroke={ArmedForcesTheme.colors.textSecondary} />
                   <Tooltip 
                     contentStyle={{
                       backgroundColor: ArmedForcesTheme.colors.surface,
@@ -328,13 +320,16 @@ const Dashboard = ({ datasets, processedData }) => {
                       borderRadius: '8px',
                       color: ArmedForcesTheme.colors.text
                     }}
+                    formatter={(value) => [`₹${value.toLocaleString()} Cr`, 'Export Value']}
                   />
-                  <Bar 
+                  <Line 
+                    type="monotone" 
                     dataKey="totalValue" 
-                    fill={ArmedForcesTheme.colors.airforce}
-                    radius={[0, 4, 4, 0]}
+                    stroke={ArmedForcesTheme.colors.airforce}
+                    strokeWidth={3}
+                    dot={{ fill: ArmedForcesTheme.colors.airforce, strokeWidth: 2, r: 4 }}
                   />
-                </BarChart>
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </ChartContainer>

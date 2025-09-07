@@ -34,8 +34,8 @@ const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
           <CommandCard className="critical">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <h2 style={{ color: ArmedForcesTheme.colors.accent, margin: 0 }}>
-                  STRATEGIC INTELLIGENCE MODULE
+                <h2 style={{ color: ArmedForcesTheme.colors.accent, margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <i className="bi bi-shield-fill-check" /> STRATEGIC INTELLIGENCE MODULE
                 </h2>
                 <p style={{ color: ArmedForcesTheme.colors.textSecondary, margin: '8px 0 0' }}>
                   Comprehensive analysis of security threats, global positioning, and strategic capabilities
@@ -133,7 +133,7 @@ const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
         {conflictData?.escalationPatterns && (
           <Col xs={24} lg={12}>
             <ChartContainer>
-              <div className="chart-title">Security Incident Patterns</div>
+              <div className="chart-title"><i className="bi bi-activity" /> Security Incident Patterns</div>
               <div className="chart-wrapper">
                 <ResponsiveContainer width="100%" height={300}>
                   <AreaChart data={conflictData.escalationPatterns}>
@@ -166,7 +166,7 @@ const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
         {conflictData?.severityTrends && (
           <Col xs={24} lg={12}>
             <ChartContainer>
-              <div className="chart-title">Incident Severity Distribution</div>
+              <div className="chart-title"><i className="bi bi-pie-chart" /> Incident Severity Distribution</div>
               <div className="chart-wrapper">
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
@@ -211,7 +211,7 @@ const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
         {globalData?.countryRankings && (
           <Col xs={24} lg={12}>
             <ChartContainer>
-              <div className="chart-title">Global Military Power Rankings</div>
+              <div className="chart-title"><i className="bi bi-bar-chart" /> Global Military Power Rankings</div>
               <div className="chart-wrapper">
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart 
@@ -251,7 +251,7 @@ const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
         {expenditureData?.expenditureTrends && (
           <Col xs={24} lg={12}>
             <ChartContainer>
-              <div className="chart-title">Strategic Expenditure Advantage</div>
+              <div className="chart-title"><i className="bi bi-graph-up-arrow" /> Strategic Expenditure Advantage</div>
               <div className="chart-wrapper">
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={expenditureData.expenditureTrends.slice(-15)}>
@@ -380,21 +380,21 @@ const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
       <Row gutter={[24, 24]} style={{ marginTop: 32 }}>
         <Col xs={24} lg={8}>
           <CommandCard className="success">
-            <h3 style={{ color: ArmedForcesTheme.colors.success, marginBottom: 16 }}>
-              🎯 STRATEGIC ADVANTAGES
+            <h3 style={{ color: ArmedForcesTheme.colors.success, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <i className="bi bi-stars" /> STRATEGIC ADVANTAGES
             </h3>
             <div style={{ color: ArmedForcesTheme.colors.text, fontSize: 12 }}>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.success}15`, borderRadius: 4 }}>
-                <strong>🌍 Global Position:</strong> 2nd largest military force globally with 2.61M total personnel
+                <strong><i className="bi bi-geo-alt-fill" /> Global Position:</strong> 2nd largest military force globally with 2.61M total personnel
               </div>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.accent}15`, borderRadius: 4 }}>
-                <strong>💪 Force Multiplier:</strong> 7.4:1 expenditure advantage over Pakistan maintaining strategic deterrence
+                <strong><i className="bi bi-lightning-charge-fill" /> Force Multiplier:</strong> 7.4:1 expenditure advantage over Pakistan maintaining strategic deterrence
               </div>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.navy}15`, borderRadius: 4 }}>
-                <strong>🚀 Technology Edge:</strong> Advanced missile systems, space capabilities, and cyber warfare units
+                <strong><i className="bi bi-cpu-fill" /> Technology Edge:</strong> Advanced missile systems, space capabilities, and cyber warfare units
               </div>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.success}15`, borderRadius: 4 }}>
-                <strong>🌐 Alliance Network:</strong> QUAD, SCO partnerships enhancing strategic depth
+                <strong><i className="bi bi-people-fill" /> Alliance Network:</strong> QUAD, SCO partnerships enhancing strategic depth
               </div>
             </div>
           </CommandCard>
@@ -402,21 +402,21 @@ const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
 
         <Col xs={24} lg={8}>
           <CommandCard className="warning">
-            <h3 style={{ color: ArmedForcesTheme.colors.warning, marginBottom: 16 }}>
-              ⚠️ THREAT ASSESSMENT
+            <h3 style={{ color: ArmedForcesTheme.colors.warning, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <i className="bi bi-exclamation-triangle-fill" /> THREAT ASSESSMENT
             </h3>
             <div style={{ color: ArmedForcesTheme.colors.text, fontSize: 12 }}>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.danger}15`, borderRadius: 4 }}>
-                <strong>💥 Escalation Pattern:</strong> 9 major incidents since 2001, with 67% high-impact events
+                <strong><i className="bi bi-arrow-up-right-circle-fill" /> Escalation Pattern:</strong> 9 major incidents since 2001, with 67% high-impact events
               </div>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.warning}15`, borderRadius: 4 }}>
-                <strong>🎯 Terror Nexus:</strong> 56% of conflicts initiated by non-state actors with state backing
+                <strong><i className="bi bi-bullseye" /> Terror Nexus:</strong> 56% of conflicts initiated by non-state actors with state backing
               </div>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.warning}15`, borderRadius: 4 }}>
-                <strong>📍 Border Dynamics:</strong> LoC remains primary flashpoint with 78% of skirmishes
+                <strong><i className="bi bi-geo" /> Border Dynamics:</strong> LoC remains primary flashpoint with 78% of skirmishes
               </div>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.danger}15`, borderRadius: 4 }}>
-                <strong>🔄 Cycle Analysis:</strong> 3-4 year escalation cycle with increasing severity
+                <strong><i className="bi bi-arrow-repeat" /> Cycle Analysis:</strong> 3-4 year escalation cycle with increasing severity
               </div>
             </div>
           </CommandCard>
@@ -424,21 +424,21 @@ const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
 
         <Col xs={24} lg={8}>
           <CommandCard className="critical">
-            <h3 style={{ color: ArmedForcesTheme.colors.danger, marginBottom: 16 }}>
-              🛡️ STRATEGIC IMPERATIVES
+            <h3 style={{ color: ArmedForcesTheme.colors.danger, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <i className="bi bi-shield-fill-plus" /> STRATEGIC IMPERATIVES
             </h3>
             <div style={{ color: ArmedForcesTheme.colors.text, fontSize: 12 }}>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.accent}15`, borderRadius: 4 }}>
-                <strong>📶 Intelligence Fusion:</strong> AI-powered threat detection across multi-domain spectrum
+                <strong><i className="bi bi-diagram-3-fill" /> Intelligence Fusion:</strong> AI-powered threat detection across multi-domain spectrum
               </div>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.navy}15`, borderRadius: 4 }}>
-                <strong>🎆 Rapid Response:</strong> 48-hour deployment capability for surgical operations
+                <strong><i className="bi bi-lightning-fill" /> Rapid Response:</strong> 48-hour deployment capability for surgical operations
               </div>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.success}15`, borderRadius: 4 }}>
-                <strong>🛠️ Force Modernization:</strong> 65% equipment upgrade completion by 2030
+                <strong><i className="bi bi-tools" /> Force Modernization:</strong> 65% equipment upgrade completion by 2030
               </div>
               <div style={{ marginBottom: 12, padding: 8, background: `${ArmedForcesTheme.colors.warning}15`, borderRadius: 4 }}>
-                <strong>🌐 Diplomatic Shield:</strong> Multilateral engagement preventing escalation
+                <strong><i className="bi bi-shield-check" /> Diplomatic Shield:</strong> Multilateral engagement preventing escalation
               </div>
             </div>
           </CommandCard>
@@ -449,8 +449,8 @@ const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
       <Row gutter={[24, 24]} style={{ marginTop: 24 }}>
         <Col span={24}>
           <CommandCard>
-            <h3 style={{ color: ArmedForcesTheme.colors.accent, marginBottom: 16 }}>
-              🔍 COMPREHENSIVE STRATEGIC THREAT MATRIX
+            <h3 style={{ color: ArmedForcesTheme.colors.accent, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <i className="bi bi-search" /> COMPREHENSIVE STRATEGIC THREAT MATRIX
             </h3>
             <Row gutter={[16, 16]}>
               <Col xs={24} md={8}>

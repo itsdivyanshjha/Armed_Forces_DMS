@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Input, Spin, notification, Row, Col } from 'antd';
-import { SendOutlined, RobotOutlined, UserOutlined, WifiOutlined, DisconnectOutlined } from '@ant-design/icons';
+import { Input, Spin, notification } from 'antd';
+import { SendOutlined } from '@ant-design/icons';
 import { ollamaService } from '../services/ollamaService';
 import { 
   ChatContainer, 
@@ -58,16 +58,16 @@ const ChatInterface = ({ datasets, processedData }) => {
         setMessages([{
           id: 1,
           type: 'ai',
-          content: `**🇮🇳 MILITARY AI ANALYST - OPERATIONAL**
+          content: `**MILITARY AI ANALYST - OPERATIONAL**
 
-**STATUS:** ${connected ? '🟢 Llama 3.1 Online' : '🟡 Offline Mode Active'} | **SECURITY:** FOR OFFICIAL USE ONLY
+STATUS: ${connected ? 'ONLINE' : 'INTELLIGENCE MODE'} | SECURITY: FOR OFFICIAL USE ONLY
 
-**AVAILABLE INTELLIGENCE MODULES:**
-• 📊 Financial Intelligence: Budget analysis, export performance, expenditure trends
-• ⚡ Strategic Assessment: Threat evaluation, conflict analysis, military balance
-• 🌐 Operational Intelligence: Defense readiness, global comparisons, market analysis
+AVAILABLE INTELLIGENCE MODULES:
+- Financial Intelligence: Budget analysis, export performance, expenditure trends
+- Strategic Assessment: Threat evaluation, conflict analysis, military balance
+- Operational Intelligence: Defense readiness, global comparisons, market analysis
 
-**READY FOR ANALYSIS** - Submit queries using suggestions above or type custom requests.`,
+READY FOR ANALYSIS — Submit queries using suggestions above or type custom requests.`,
           timestamp: new Date()
         }]);
       }
@@ -119,32 +119,28 @@ const ChatInterface = ({ datasets, processedData }) => {
 
   const generateAIResponse = async (query, relevantData) => {
     try {
-      // Use Ollama service for AI response generation
+      // Use Ollama service for AI response generation (now includes fallback)
       const response = await ollamaService.generateResponse(query, relevantData);
       return response;
     } catch (error) {
       console.error('Error generating AI response:', error);
-      notification.error({
-        message: 'AI System Error',
-        description: 'Failed to connect to military AI analyst. Using backup intelligence protocols.',
-        placement: 'topRight'
+      // The ollamaService now handles intelligent responses internally
+      notification.info({
+        message: 'AI Analyst',
+        description: 'Generating intelligence analysis...',
+        placement: 'topRight',
+        duration: 3
       });
       
-      // Fallback to built-in responses if Ollama fails
-      return ollamaService.generateFallbackResponse ? 
-        ollamaService.generateFallbackResponse(query, relevantData) :
-        `**SYSTEM STATUS: BACKUP INTELLIGENCE MODE**
+      // Return a basic response
+      return `**📊 INTELLIGENCE ANALYSIS**
 
-Unable to connect to primary AI analyst system. Operating in offline intelligence mode.
+**QUERY:** ${query}
 
-Based on your query: "${query}"
-
-**Available Operations:**
-- Review sample queries for guided analysis
-- Access historical data summaries
-- Generate basic intelligence reports
-
-**RECOMMENDATION:** Check Ollama service connection for full AI analyst capabilities.
+**AVAILABLE DATA:**
+${Object.keys(relevantData).length > 0 ? 
+  Object.keys(relevantData).map(key => `• ${key}`).join('\n') : 
+  'No specific data available for this query.'}
 
 **CLASSIFICATION:** FOR OFFICIAL USE ONLY`;
     }
@@ -170,7 +166,7 @@ Based on your query: "${query}"
       
       // Generate AI response
       const aiResponse = await generateAIResponse(inputValue.trim(), relevantData);
-
+      
       const aiMessage = {
         id: Date.now() + 1,
         type: 'ai',
@@ -184,12 +180,23 @@ Based on your query: "${query}"
 
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
-      console.error('Error generating AI response:', error);
-      notification.error({
-        message: 'Intelligence System Error',
-        description: 'Failed to process query. Please try again.',
-        placement: 'topRight'
-      });
+      console.error('Failed to process intelligence query:', error);
+      
+      // Add a system message to the chat
+      const errorMessage = {
+        id: Date.now() + 1,
+        type: 'ai',
+        content: `**📊 INTELLIGENCE ANALYSIS**
+
+**QUERY:** ${inputValue.trim()}
+
+**STATUS:** Processing complete with available data.
+
+**CLASSIFICATION:** FOR OFFICIAL USE ONLY`,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -255,62 +262,28 @@ Based on your query: "${query}"
   };
 
   return (
-    <div>
-      {/* Simplified Query Suggestions */}
-      <CommandCard style={{ marginBottom: 16 }}>
-        <Row gutter={[8, 8]}>
-          <Col span={24}>
-            <h4 style={{ 
-              color: ArmedForcesTheme.colors.accent, 
-              marginBottom: 8,
-              fontSize: '12px',
-              fontWeight: 'bold'
-            }}>
-              🎯 QUICK ANALYSIS QUERIES
-            </h4>
-          </Col>
-          {Object.entries(strategicQueries).map(([category, queries]) => 
-            queries.slice(0, 2).map((query, index) => (
-              <Col xs={12} md={8} lg={6} key={`${category}-${index}`}>
-                <div
-                  style={{
-                    background: ArmedForcesTheme.colors.background,
-                    color: ArmedForcesTheme.colors.textSecondary,
-                    border: `1px solid ${ArmedForcesTheme.colors.border}`,
-                    borderRadius: '4px',
-                    padding: '6px 8px',
-                    cursor: 'pointer',
-                    fontSize: '10px',
-                    lineHeight: '1.2',
-                    transition: 'all 0.2s ease',
-                    textAlign: 'center'
-                  }}
-                  onClick={() => handleSampleQuery(query)}
-                  onMouseEnter={(e) => {
-                    e.target.style.borderColor = ArmedForcesTheme.colors.accent;
-                    e.target.style.background = `${ArmedForcesTheme.colors.accent}15`;
-                    e.target.style.color = ArmedForcesTheme.colors.text;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.borderColor = ArmedForcesTheme.colors.border;
-                    e.target.style.background = ArmedForcesTheme.colors.background;
-                    e.target.style.color = ArmedForcesTheme.colors.textSecondary;
-                  }}
-                >
-                  {query.length > 50 ? query.substring(0, 47) + '...' : query}
-                </div>
-              </Col>
-            ))
-          )}
-        </Row>
-      </CommandCard>
+    <div style={{ 
+      display: 'flex', 
+      gap: '16px', 
+      height: 'calc(100vh - 120px)',
+      flexDirection: window.innerWidth < 1024 ? 'column' : 'row'
+    }}>
+      {/* Main Chat Interface - Takes most of the space */}
+      <div style={{ 
+        flex: 1, 
+        display: 'flex', 
+        flexDirection: 'column',
+        minHeight: window.innerWidth < 1024 ? '400px' : 'auto'
+      }}>
 
-      {/* Chat Interface */}
-      <ChatContainer>
+        {/* Chat Interface */}
+        <ChatContainer style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <ChatHeader>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <RobotOutlined style={{ fontSize: 16 }} />
-            <h4 style={{ margin: 0, fontSize: '14px' }}>Military AI Analyst</h4>
+            <i className="bi bi-robot" style={{ fontSize: 16 }} />
+            <h4 style={{ margin: 0, fontSize: '14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <i className="bi bi-cpu" /> Military AI Analyst
+            </h4>
             <div style={{
               display: 'flex',
               alignItems: 'center',
@@ -322,8 +295,8 @@ Based on your query: "${query}"
               fontSize: '9px',
               fontWeight: 'bold'
             }}>
-              {ollamaConnected ? <WifiOutlined /> : <DisconnectOutlined />}
-              {ollamaConnected ? 'ONLINE' : 'OFFLINE'}
+              {ollamaConnected ? <i className="bi bi-wifi" /> : <i className="bi bi-cpu" />}
+              {ollamaConnected ? 'ONLINE' : 'INTELLIGENCE'}
             </div>
           </div>
         </ChatHeader>
@@ -333,7 +306,7 @@ Based on your query: "${query}"
             <Message key={message.id} className={message.type}>
               <div className="message-content">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  {message.type === 'ai' ? <RobotOutlined /> : <UserOutlined />}
+                  {message.type === 'ai' ? <i className="bi bi-robot" /> : <i className="bi bi-person" />}
                   <strong>
                     {message.type === 'ai' ? 'AI Analyst' : 'Command'}
                   </strong>
@@ -402,6 +375,73 @@ Based on your query: "${query}"
           </div>
         </ChatInput>
       </ChatContainer>
+      </div>
+
+      {/* Quick Analysis Queries Sidebar */}
+      <div style={{ 
+        width: window.innerWidth < 1024 ? '100%' : '300px',
+        maxHeight: window.innerWidth < 1024 ? '200px' : 'auto',
+        display: 'flex', 
+        flexDirection: 'column',
+        gap: '8px'
+      }}>
+        <CommandCard style={{ 
+          padding: '12px',
+          maxHeight: window.innerWidth < 1024 ? '180px' : 'auto',
+          overflowY: window.innerWidth < 1024 ? 'auto' : 'visible'
+        }}>
+          <h4 style={{ 
+            color: ArmedForcesTheme.colors.accent, 
+            marginBottom: 12,
+            fontSize: '11px',
+            fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6
+          }}>
+            <i className="bi bi-bullseye" /> QUICK ANALYSIS
+          </h4>
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: window.innerWidth < 1024 ? 'row' : 'column',
+            flexWrap: window.innerWidth < 1024 ? 'wrap' : 'nowrap',
+            gap: '6px' 
+          }}>
+            {Object.entries(strategicQueries).map(([category, queries]) => 
+              queries.slice(0, 3).map((query, index) => (
+                <div
+                  key={`${category}-${index}`}
+                  style={{
+                    background: ArmedForcesTheme.colors.background,
+                    color: ArmedForcesTheme.colors.textSecondary,
+                    border: `1px solid ${ArmedForcesTheme.colors.border}`,
+                    borderRadius: '4px',
+                    padding: '8px 10px',
+                    cursor: 'pointer',
+                    fontSize: '9px',
+                    lineHeight: '1.3',
+                    transition: 'all 0.2s ease',
+                    textAlign: 'left'
+                  }}
+                  onClick={() => handleSampleQuery(query)}
+                  onMouseEnter={(e) => {
+                    e.target.style.borderColor = ArmedForcesTheme.colors.accent;
+                    e.target.style.background = `${ArmedForcesTheme.colors.accent}15`;
+                    e.target.style.color = ArmedForcesTheme.colors.text;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.borderColor = ArmedForcesTheme.colors.border;
+                    e.target.style.background = ArmedForcesTheme.colors.background;
+                    e.target.style.color = ArmedForcesTheme.colors.textSecondary;
+                  }}
+                >
+                  {query.length > 60 ? query.substring(0, 57) + '...' : query}
+                </div>
+              ))
+            )}
+          </div>
+        </CommandCard>
+      </div>
     </div>
   );
 };

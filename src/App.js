@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ConfigProvider, Spin, notification } from 'antd';
-import { 
-  DashboardOutlined, 
-  MessageOutlined, 
-  DollarOutlined,
-  GlobalOutlined 
-} from '@ant-design/icons';
+// Using Bootstrap Icons rendered via <i> elements for a consistent, professional set
 import { 
   AppLayout, 
   AppHeader, 
@@ -13,6 +8,7 @@ import {
   LoadingOverlay 
 } from './components/StyledComponents';
 import { antdTheme } from './styles/theme';
+import LogoIcon from './components/LogoIcon';
 import { dataLoader } from './services/dataLoader';
 import DataProcessors from './services/dataProcessors';
 import Dashboard from './components/Dashboard';
@@ -105,10 +101,10 @@ function App() {
   };
 
   const navigationItems = [
-    { key: 'dashboard', label: 'Command Dashboard', icon: <DashboardOutlined /> },
-    { key: 'chat', label: 'AI Intelligence', icon: <MessageOutlined /> },
-    { key: 'financial', label: 'Financial Intelligence', icon: <DollarOutlined /> },
-    { key: 'strategic', label: 'Strategic Analysis', icon: <GlobalOutlined /> }
+    { key: 'dashboard', label: 'Command Dashboard', iconClass: 'bi-speedometer2' },
+    { key: 'chat', label: 'AI Intelligence', iconClass: 'bi-cpu' },
+    { key: 'financial', label: 'Financial Intelligence', iconClass: 'bi-cash-stack' },
+    { key: 'strategic', label: 'Strategic Analysis', iconClass: 'bi-globe2' }
   ];
 
   if (loading) {
@@ -155,7 +151,7 @@ function App() {
       <AppLayout>
         <AppHeader>
           <div className="logo">
-            <div className="emblem">🇮🇳</div>
+            <div className="emblem"><LogoIcon size={20} /></div>
             <h1>Intelligence Hub</h1>
           </div>
           <div className="nav-actions">
@@ -167,21 +163,22 @@ function App() {
                   background: activeTab === item.key ? '#FFD700' : 'transparent',
                   color: activeTab === item.key ? '#1B4332' : '#FFD700',
                   border: '1px solid #FFD700',
-                  padding: '6px 12px',
+                  padding: '4px 10px',
                   borderRadius: '4px',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  fontSize: '11px',
+                  fontSize: '10px',
                   fontWeight: '600',
                   textTransform: 'uppercase',
                   letterSpacing: '0.5px',
                   whiteSpace: 'nowrap',
-                  minHeight: '32px'
+                  height: '28px',
+                  maxHeight: '28px'
                 }}
               >
-                {item.icon}
+                <i className={`bi ${item.iconClass}`} />
                 {item.label}
               </button>
             ))}

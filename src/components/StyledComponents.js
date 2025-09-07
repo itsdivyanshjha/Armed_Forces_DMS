@@ -38,16 +38,16 @@ export const AppHeader = styled(Header)`
     }
     
     .emblem {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       background: ${ArmedForcesTheme.colors.accent};
-      border-radius: 50%;
+      border-radius: 999px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
       color: ${ArmedForcesTheme.colors.primary};
       font-weight: ${ArmedForcesTheme.typography.weights.bold};
+      box-shadow: ${ArmedForcesTheme.shadows.small};
     }
   }
 
@@ -55,7 +55,21 @@ export const AppHeader = styled(Header)`
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 0;
+    max-width: 100%;
+  }
+
+  @media (max-width: ${ArmedForcesTheme.breakpoints.tablet}) {
+    .logo h1 { font-size: 18px; }
+    .nav-actions button { 
+      padding: 3px 6px !important; 
+      font-size: 9px !important; 
+      height: 24px !important;
+      max-height: 24px !important;
+    }
   }
 `;
 
@@ -83,6 +97,7 @@ export const CommandCard = styled(Card)`
   border-radius: 12px;
   box-shadow: ${ArmedForcesTheme.shadows.medium};
   margin-bottom: ${ArmedForcesTheme.spacing.lg};
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
   
   &.critical {
     border-left: 4px solid ${ArmedForcesTheme.colors.danger};
@@ -121,7 +136,6 @@ export const CommandCard = styled(Card)`
   &:hover {
     transform: translateY(-2px);
     box-shadow: ${ArmedForcesTheme.shadows.large};
-    transition: all 0.3s ease;
   }
 `;
 
@@ -273,6 +287,7 @@ export const MilitaryButton = styled(Button)`
   letter-spacing: 1px;
   height: 40px;
   padding: 0 ${ArmedForcesTheme.spacing.lg};
+  transition: transform .15s ease, box-shadow .15s ease, background .2s ease;
   
   &:hover, &:focus {
     background: ${ArmedForcesTheme.colors.accent};
@@ -310,7 +325,7 @@ export const ChatContainer = styled.div`
   background: ${ArmedForcesTheme.colors.surface};
   border: 1px solid ${ArmedForcesTheme.colors.border};
   border-radius: 12px;
-  height: 600px;
+  min-height: 500px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -336,6 +351,27 @@ export const ChatMessages = styled.div`
   overflow-y: auto;
   padding: ${ArmedForcesTheme.spacing.md};
   background: ${ArmedForcesTheme.colors.background};
+  max-height: calc(100vh - 220px);
+  min-height: 400px;
+  
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: ${ArmedForcesTheme.colors.surface};
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: ${ArmedForcesTheme.colors.border};
+    border-radius: 4px;
+    
+    &:hover {
+      background: ${ArmedForcesTheme.colors.accent};
+    }
+  }
 `;
 
 export const ChatInput = styled.div`
@@ -379,12 +415,31 @@ export const Message = styled.div`
     .message-content {
       background: ${ArmedForcesTheme.colors.surface};
       color: ${ArmedForcesTheme.colors.text};
-      display: inline-block;
-      padding: ${ArmedForcesTheme.spacing.sm} ${ArmedForcesTheme.spacing.md};
+      display: block;
+      padding: ${ArmedForcesTheme.spacing.lg};
       border-radius: 12px 12px 12px 4px;
-      max-width: 70%;
+      max-width: 95%;
       border: 1px solid ${ArmedForcesTheme.colors.border};
       border-left: 3px solid ${ArmedForcesTheme.colors.accent};
+      line-height: 1.6;
+      
+      /* Enhanced formatting for structured responses */
+      strong {
+        color: ${ArmedForcesTheme.colors.accent};
+        font-weight: 600;
+      }
+      
+      /* Better spacing for sections */
+      > div {
+        margin-bottom: ${ArmedForcesTheme.spacing.sm};
+      }
+      
+      /* Highlight important sections */
+      div:contains("📊"), div:contains("🎯"), div:contains("⚔️"), 
+      div:contains("💰"), div:contains("🌍"), div:contains("⚠️") {
+        font-weight: 500;
+        margin: ${ArmedForcesTheme.spacing.md} 0;
+      }
     }
   }
   
