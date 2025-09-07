@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Card, Layout, Button, Input, Select } from 'antd';
+import { Card, Layout, Button } from 'antd';
 import { ArmedForcesTheme } from '../styles/theme';
 
 const { Header, Content, Sider } = Layout;
@@ -12,7 +12,7 @@ export const AppLayout = styled(Layout)`
 `;
 
 export const AppHeader = styled(Header)`
-  background: ${ArmedForcesTheme.gradients.primary};
+  background: ${ArmedForcesTheme.gradients.header};
   border-bottom: 2px solid ${ArmedForcesTheme.colors.accent};
   padding: 0 ${ArmedForcesTheme.spacing.lg};
   display: flex;

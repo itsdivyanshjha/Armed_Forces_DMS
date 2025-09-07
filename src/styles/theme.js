@@ -50,6 +50,8 @@ export const ArmedForcesTheme = {
 
   gradients: {
     primary: 'linear-gradient(135deg, #1B4332 0%, #2D5016 100%)',
+    // Neutral, service-agnostic header gradient to avoid regiment-specific colors
+    header: 'linear-gradient(135deg, #0F172A 0%, #1F2937 100%)',
     secondary: 'linear-gradient(135deg, #0F3460 0%, #4A90E2 100%)',
     accent: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)'
   }

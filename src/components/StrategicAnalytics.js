@@ -13,14 +13,7 @@ import {
 import { ArmedForcesTheme } from '../styles/theme';
 
 const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
-  const chartColors = [
-    ArmedForcesTheme.colors.accent,
-    ArmedForcesTheme.colors.success,
-    ArmedForcesTheme.colors.warning,
-    ArmedForcesTheme.colors.danger,
-    ArmedForcesTheme.colors.navy,
-    ArmedForcesTheme.colors.airforce
-  ];
+  // Colors derived directly where used; no unused local palette
 
   // Calculate strategic metrics
   const getStrategicMetrics = () => {

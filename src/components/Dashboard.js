@@ -246,6 +246,7 @@ const Dashboard = ({ datasets, processedData }) => {
                   <CartesianGrid strokeDasharray="3 3" stroke={ArmedForcesTheme.colors.border} />
                   <XAxis dataKey="year" stroke={ArmedForcesTheme.colors.textSecondary} />
                   <YAxis stroke={ArmedForcesTheme.colors.textSecondary} />
+                  <YAxis yAxisId="ratio" orientation="right" stroke={ArmedForcesTheme.colors.success} />
                   <Tooltip 
                     contentStyle={{
                       backgroundColor: ArmedForcesTheme.colors.surface,
