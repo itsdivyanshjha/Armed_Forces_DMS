@@ -93,6 +93,7 @@ function App() {
             conflictData={processedData.conflictData}
             globalData={processedData.globalComparison}
             expenditureData={processedData.militaryExpenditure}
+            icgData={processedData.icgReports}
           />
         );
       default:

@@ -12,7 +12,7 @@ import {
 } from 'recharts';
 import { ArmedForcesTheme } from '../styles/theme';
 
-const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
+const StrategicAnalytics = ({ conflictData, globalData, expenditureData, icgData }) => {
   // Colors derived directly where used; no unused local palette
 
   // Calculate strategic metrics
@@ -21,7 +21,11 @@ const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
       securityIncidents: conflictData?.summary?.totalIncidents || 0,
       globalRank: globalData?.summary?.indiaRank || 'N/A',
       expenditureRatio: expenditureData?.summary?.currentRatio || 0,
-      timespan: conflictData?.summary?.yearSpan || 'N/A'
+      timespan: conflictData?.summary?.yearSpan || 'N/A',
+      icgSafetyIndex: icgData?.summary?.safetyIndex || 0,
+      icgTotalReports: icgData?.summary?.totalReports || 0,
+      icgDefects: icgData?.summary?.totalDefects || 0,
+      icgIncidents: icgData?.summary?.totalIncidents || 0
     };
   };
 
@@ -93,6 +97,39 @@ const StrategicAnalytics = ({ conflictData, globalData, expenditureData }) => {
           <div className="metric-label">Defense Readiness Status</div>
           <div className="metric-trend positive">
             ✅ All Systems Operational
+          </div>
+        </MetricCard>
+
+        <MetricCard type="success">
+          <div className="metric-icon">
+            <SafetyOutlined />
+          </div>
+          <div className="metric-value">{metrics.icgSafetyIndex.toFixed(1)}%</div>
+          <div className="metric-label">ICG Safety Index</div>
+          <div className="metric-trend positive">
+            <SafetyOutlined /> Coast Guard Operations
+          </div>
+        </MetricCard>
+
+        <MetricCard type="warning">
+          <div className="metric-icon">
+            <WarningOutlined />
+          </div>
+          <div className="metric-value">{metrics.icgDefects}</div>
+          <div className="metric-label">Aircraft Defects Tracked</div>
+          <div className="metric-trend neutral">
+            <ExclamationOutlined /> Maintenance Monitoring
+          </div>
+        </MetricCard>
+
+        <MetricCard type="default">
+          <div className="metric-icon">
+            <GlobalOutlined />
+          </div>
+          <div className="metric-value">{metrics.icgTotalReports}</div>
+          <div className="metric-label">ICG Total Reports</div>
+          <div className="metric-trend neutral">
+            <GlobalOutlined /> Operational Intelligence
           </div>
         </MetricCard>
       </MetricsGrid>

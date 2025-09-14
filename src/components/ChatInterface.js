@@ -41,6 +41,12 @@ const ChatInterface = ({ datasets, processedData }) => {
       "Analyze budget cluster allocation for strategic planning",
       "Compare global armed forces strength and positioning",
       "Generate comprehensive defense readiness assessment"
+    ],
+    "Coast Guard Operations": [
+      "Analyze ICG aircraft defect patterns and maintenance trends",
+      "Show ICG safety index and incident analysis by unit",
+      "Compare defect rates across different ICG squadrons",
+      "Generate ICG operational safety assessment report"
     ]
   };
 
@@ -66,6 +72,7 @@ AVAILABLE INTELLIGENCE MODULES:
 - Financial Intelligence: Budget analysis, export performance, expenditure trends
 - Strategic Assessment: Threat evaluation, conflict analysis, military balance
 - Operational Intelligence: Defense readiness, global comparisons, market analysis
+- Coast Guard Operations: ICG safety analysis, defect tracking, incident reports
 
 READY FOR ANALYSIS — Submit queries using suggestions above or type custom requests.`,
           timestamp: new Date()
@@ -83,6 +90,10 @@ READY FOR ANALYSIS — Submit queries using suggestions above or type custom req
   const identifyRelevantDataset = (query) => {
     const lowercaseQuery = query.toLowerCase();
     const relevantData = {};
+    
+    console.log('Identifying relevant dataset for query:', query);
+    console.log('Available processedData keys:', Object.keys(processedData));
+    console.log('ICG Reports available:', !!processedData.icgReports);
 
     // Match query to relevant datasets
     if (lowercaseQuery.includes('recruit') || lowercaseQuery.includes('personnel') || lowercaseQuery.includes('army')) {
@@ -95,6 +106,9 @@ READY FOR ANALYSIS — Submit queries using suggestions above or type custom req
 
     if (lowercaseQuery.includes('budget') || lowercaseQuery.includes('allocation') || lowercaseQuery.includes('spending')) {
       relevantData.budgetTrends = processedData.budgetTrends;
+      if (lowercaseQuery.includes('cluster')) {
+        relevantData.defenseClusterBudget = processedData.defenseClusterBudget;
+      }
     }
 
     if (lowercaseQuery.includes('conflict') || lowercaseQuery.includes('pakistan') || lowercaseQuery.includes('escalation')) {
@@ -109,11 +123,20 @@ READY FOR ANALYSIS — Submit queries using suggestions above or type custom req
       relevantData.militaryExpenditure = processedData.militaryExpenditure;
     }
 
+    if (lowercaseQuery.includes('icg') || lowercaseQuery.includes('coast guard') || lowercaseQuery.includes('defect') || 
+        lowercaseQuery.includes('incident') || lowercaseQuery.includes('safety') || lowercaseQuery.includes('aircraft')) {
+      console.log('ICG query detected, adding ICG data');
+      console.log('ICG data structure:', processedData.icgReports);
+      relevantData.icgReports = processedData.icgReports;
+    }
+
     // If no specific match, include all available data
     if (Object.keys(relevantData).length === 0) {
+      console.log('No specific match, returning all processed data');
       return processedData;
     }
 
+    console.log('Returning relevant data:', Object.keys(relevantData));
     return relevantData;
   };
 

@@ -357,16 +357,256 @@ export class DataProcessors {
     }
   }
 
+  // Process Defense Cluster Budget Allocation.csv
+  static processDefenseClusterBudget(data) {
+    if (!data || data.length === 0) return null;
+
+    try {
+      // Extract cluster allocation data
+      const clusterAllocations = _(data)
+        .filter(row => row.Field && row.Field !== 'Field')
+        .map(row => {
+          // Get the latest year data (FY 10-11)
+          const latestBudget = this.parseNumber(row['Budget - FY 10-11 ( in Crore)']);
+          const latestPercentage = this.parseNumber(row['Percentage % - FY 10-11']);
+          
+          return {
+            cluster: row.Field,
+            budget: latestBudget,
+            percentage: latestPercentage,
+            color: this.getClusterColor(row.Field)
+          };
+        })
+        .filter(item => item.budget > 0)
+        .orderBy('budget', 'desc')
+        .value();
+
+      // Historical trends
+      const historicalTrends = _(data)
+        .filter(row => row.Field && row.Field !== 'Field')
+        .map(row => ({
+          cluster: row.Field,
+          fy0809: {
+            budget: this.parseNumber(row['Budget - FY 08-09 ( in Crore)']),
+            percentage: this.parseNumber(row['Percentage % - FY 08-09'])
+          },
+          fy0910: {
+            budget: this.parseNumber(row['Budget - FY 09-10 (in Crore)']),
+            percentage: this.parseNumber(row['Percentage % - FY 09-10'])
+          },
+          fy1011: {
+            budget: this.parseNumber(row['Budget - FY 10-11 ( in Crore)']),
+            percentage: this.parseNumber(row['Percentage % - FY 10-11'])
+          }
+        }))
+        .value();
+
+      return {
+        clusterAllocations,
+        historicalTrends,
+        summary: {
+          totalBudget: _.sumBy(clusterAllocations, 'budget'),
+          totalClusters: clusterAllocations.length,
+          topCluster: clusterAllocations[0]?.cluster,
+          topClusterPercentage: clusterAllocations[0]?.percentage
+        }
+      };
+    } catch (error) {
+      console.error('Error processing defense cluster budget data:', error);
+      return null;
+    }
+  }
+
+  // Helper method to assign colors to clusters
+  static getClusterColor(cluster) {
+    const colorMap = {
+      'Naval Systems': '#1f77b4',
+      'Missiles': '#ff7f0e', 
+      'Aeronautics': '#2ca02c',
+      'Electronics': '#d62728',
+      'Armored Vehicles': '#9467bd',
+      'Artillery': '#8c564b',
+      'Infrastructure': '#e377c2',
+      'Other': '#7f7f7f'
+    };
+    return colorMap[cluster] || '#7f7f7f';
+  }
+
+  // Process ICG All Reports (icg_all_reports.csv)
+  static processICGReports(data) {
+    if (!data || data.length === 0) return null;
+
+    console.log('Processing ICG data:', data.length, 'records');
+    console.log('Sample record:', data[0]);
+
+    try {
+      // Separate defect reports and incident analysis
+      const defectReports = data.filter(row => row.Record_Type === 'Defect_Summary');
+      const incidentReports = data.filter(row => row.Record_Type === 'Incident_Analysis');
+      
+      console.log('Defect reports:', defectReports.length);
+      console.log('Incident reports:', incidentReports.length);
+
+      // Process defect reports
+      const defectAnalysis = {
+        totalDefects: defectReports.length,
+        defectByAircraft: _(defectReports)
+          .filter(row => row.A_C_No)
+          .groupBy('A_C_No')
+          .map((aircraftData, aircraft) => ({
+            aircraft,
+            defectCount: aircraftData.length,
+            defects: aircraftData.map(d => ({
+              item: d.Item_Description,
+              briefDescription: d.Brief_Description,
+              remarks: d.Remarks,
+              defectRef: d.Defect_Report_Ref_No_Date
+            }))
+          }))
+          .orderBy('defectCount', 'desc')
+          .value(),
+        
+        defectByUnit: _(defectReports)
+          .map(row => {
+            const rawUnit = (row.Unit && String(row.Unit).trim()) || (row.Unit_Section && String(row.Unit_Section).trim()) || 'Unknown';
+            return { ...row, __unitKey: rawUnit };
+          })
+          .groupBy('__unitKey')
+          .map((unitData, unitKey) => ({
+            unit: String(unitKey).replace(/[()]/g, '').trim(),
+            defectCount: unitData.length,
+            percentage: 0 // Will calculate
+          }))
+          .orderBy('defectCount', 'desc')
+          .value(),
+
+        commonDefects: _(defectReports)
+          .filter(row => row.Item_Description)
+          .groupBy('Item_Description')
+          .map((defectData, item) => ({
+            item,
+            count: defectData.length,
+            percentage: 0 // Will calculate
+          }))
+          .orderBy('count', 'desc')
+          .value()
+      };
+
+      // Calculate percentages for defect analysis
+      const totalDefects = defectAnalysis.totalDefects;
+      defectAnalysis.defectByUnit.forEach(item => {
+        item.percentage = totalDefects > 0 ? (item.defectCount / totalDefects * 100) : 0;
+      });
+      defectAnalysis.commonDefects.forEach(item => {
+        item.percentage = totalDefects > 0 ? (item.count / totalDefects * 100) : 0;
+      });
+
+      console.log('Defect analysis results:');
+      console.log('- Total defects:', defectAnalysis.totalDefects);
+      console.log('- Common defects:', defectAnalysis.commonDefects.length);
+      console.log('- Defects by unit:', defectAnalysis.defectByUnit.length);
+      console.log('- Sample common defects:', defectAnalysis.commonDefects.slice(0, 3));
+
+      // Process incident reports
+      const incidentAnalysis = {
+        totalIncidents: incidentReports.length,
+        incidentsByAircraft: _(incidentReports)
+          .filter(row => row.Aircraft_No)
+          .groupBy('Aircraft_No')
+          .map((aircraftData, aircraft) => ({
+            aircraft,
+            incidentCount: aircraftData.length,
+            incidents: aircraftData.map(i => ({
+              date: i.Date_of_Incident,
+              place: i.Place_of_Incident,
+              description: i.Brief_Description,
+              cause: i.Cause_Classification,
+              analysis: i.Technical_Analysis
+            }))
+          }))
+          .orderBy('incidentCount', 'desc')
+          .value(),
+
+        incidentsByUnit: _(incidentReports)
+          .map(row => {
+            const rawUnit = (row.Unit && String(row.Unit).trim()) || (row.Unit_Section && String(row.Unit_Section).trim()) || 'Unknown';
+            return { ...row, __unitKey: rawUnit };
+          })
+          .groupBy('__unitKey')
+          .map((unitData, unitKey) => ({
+            unit: String(unitKey).replace(/[()]/g, '').trim(),
+            incidentCount: unitData.length,
+            percentage: 0 // Will calculate
+          }))
+          .orderBy('incidentCount', 'desc')
+          .value(),
+
+        causeClassification: _(incidentReports)
+          .filter(row => row.Cause_Classification)
+          .groupBy('Cause_Classification')
+          .map((causeData, cause) => ({
+            cause,
+            count: causeData.length,
+            percentage: 0 // Will calculate
+          }))
+          .orderBy('count', 'desc')
+          .value()
+      };
+
+      // Calculate percentages for incident analysis
+      const totalIncidents = incidentAnalysis.totalIncidents;
+      incidentAnalysis.incidentsByUnit.forEach(item => {
+        item.percentage = totalIncidents > 0 ? (item.incidentCount / totalIncidents * 100) : 0;
+      });
+      incidentAnalysis.causeClassification.forEach(item => {
+        item.percentage = totalIncidents > 0 ? (item.count / totalIncidents * 100) : 0;
+      });
+
+      // Safety metrics
+      const safetyMetrics = {
+        totalReports: data.length,
+        defectRate: totalDefects > 0 ? (totalDefects / data.length * 100) : 0,
+        incidentRate: totalIncidents > 0 ? (totalIncidents / data.length * 100) : 0,
+        safetyIndex: totalIncidents > 0 ? Math.max(0, 100 - (totalIncidents / data.length * 100)) : 100,
+        mostProblematicAircraft: defectAnalysis.defectByAircraft[0]?.aircraft || 'N/A',
+        mostActiveUnit: defectAnalysis.defectByUnit[0]?.unit || 'N/A'
+      };
+
+      const result = {
+        defectAnalysis,
+        incidentAnalysis,
+        safetyMetrics,
+        summary: {
+          totalReports: data.length,
+          totalDefects: defectAnalysis.totalDefects,
+          totalIncidents: incidentAnalysis.totalIncidents,
+          safetyIndex: safetyMetrics.safetyIndex,
+          topDefectItem: defectAnalysis.commonDefects[0]?.item || 'N/A',
+          topIncidentCause: incidentAnalysis.causeClassification[0]?.cause || 'N/A'
+        }
+      };
+
+      console.log('Final ICG processing result:', result);
+      return result;
+    } catch (error) {
+      console.error('Error processing ICG reports data:', error);
+      return null;
+    }
+  }
+
   // Main processing function that handles all datasets
   static processAllData(datasets) {
     const processed = {};
 
     try {
       // Process each dataset based on its key
+      console.log('Available dataset keys:', Object.keys(datasets));
       Object.keys(datasets).forEach(key => {
         const dataset = datasets[key];
         if (!dataset || !dataset.data) return;
 
+        console.log(`Processing dataset: ${key} with ${dataset.data.length} records`);
+        
         switch (key) {
           case 'armyRecruits20172022':
             processed.armyRecruits = this.processArmyRecruits(dataset.data);
@@ -386,7 +626,16 @@ export class DataProcessors {
           case 'militaryExpenditureIndoPak19602023':
             processed.militaryExpenditure = this.processMilitaryExpenditure(dataset.data);
             break;
+          case 'defenseClusterBudgetAllocation':
+            processed.defenseClusterBudget = this.processDefenseClusterBudget(dataset.data);
+            break;
+          case 'icgAllReports':
+            console.log('Processing ICG reports...');
+            processed.icgReports = this.processICGReports(dataset.data);
+            console.log('ICG reports processed:', processed.icgReports);
+            break;
           default:
+            console.log(`No specific processor for key: ${key}, using generic processing`);
             // Generic processing for other datasets
             processed[key] = {
               rawData: dataset.data.slice(0, 100), // Limit for performance
@@ -396,6 +645,8 @@ export class DataProcessors {
         }
       });
 
+      console.log('Final processed data keys:', Object.keys(processed));
+      console.log('ICG Reports in final data:', processed.icgReports);
       return processed;
     } catch (error) {
       console.error('Error processing datasets:', error);

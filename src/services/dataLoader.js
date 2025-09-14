@@ -11,7 +11,8 @@ class DataLoader {
       'Defense Cluster Budget Allocation.csv',
       'Global Armed Forces.csv',
       'Indo-Pak Conflict Escalation.csv',
-      'Military Expenditure Indo-Pak 1960-2023.xlsx'
+      'Military Expenditure Indo-Pak 1960-2023.xlsx',
+      'icg_all_reports.csv'
     ];
     
     this.cache = {};
@@ -142,7 +143,7 @@ class DataLoader {
 
   generateDataKey(filename) {
     // Convert filename to camelCase key
-    return filename
+    const key = filename
       .replace(/\.[^/.]+$/, '') // Remove extension
       .replace(/[^a-zA-Z0-9]/g, ' ') // Replace special chars with spaces
       .split(' ')
@@ -152,6 +153,9 @@ class DataLoader {
         word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       )
       .join('');
+    
+    console.log(`Generated key for ${filename}: ${key}`);
+    return key;
   }
 
   getDataset(key) {

@@ -41,7 +41,11 @@ const Dashboard = ({ datasets, processedData }) => {
       totalRecruits: processedData.armyRecruits?.summary?.totalRecruits || 0,
       defenseExportValue: processedData.defenseExports?.summary?.totalExportValue || 0,
       budgetUtilization: processedData.budgetTrends?.summary?.totalBudget || 0,
-      conflictIncidents: processedData.conflictData?.summary?.totalIncidents || 0
+      conflictIncidents: processedData.conflictData?.summary?.totalIncidents || 0,
+      icgSafetyIndex: processedData.icgReports?.summary?.safetyIndex || 0,
+      icgTotalReports: processedData.icgReports?.summary?.totalReports || 0,
+      icgDefects: processedData.icgReports?.summary?.totalDefects || 0,
+      icgIncidents: processedData.icgReports?.summary?.totalIncidents || 0
     };
 
     return metrics;
@@ -134,6 +138,39 @@ const Dashboard = ({ datasets, processedData }) => {
           <div className="metric-label">Security Incidents</div>
           <div className="metric-trend neutral">
             <WarningOutlined /> Under Monitoring
+          </div>
+        </MetricCard>
+
+        <MetricCard type="success">
+          <div className="metric-icon">
+            <CheckCircleOutlined />
+          </div>
+          <div className="metric-value">{metrics.icgSafetyIndex.toFixed(1)}%</div>
+          <div className="metric-label">ICG Safety Index</div>
+          <div className="metric-trend positive">
+            <CheckCircleOutlined /> Operational Safety
+          </div>
+        </MetricCard>
+
+        <MetricCard type="warning">
+          <div className="metric-icon">
+            <WarningOutlined />
+          </div>
+          <div className="metric-value">{metrics.icgDefects}</div>
+          <div className="metric-label">Aircraft Defects</div>
+          <div className="metric-trend neutral">
+            <WarningOutlined /> Maintenance Tracking
+          </div>
+        </MetricCard>
+
+        <MetricCard type="default">
+          <div className="metric-icon">
+            <GlobalOutlined />
+          </div>
+          <div className="metric-value">{metrics.icgTotalReports}</div>
+          <div className="metric-label">ICG Total Reports</div>
+          <div className="metric-trend neutral">
+            <CheckCircleOutlined /> Coast Guard Operations
           </div>
         </MetricCard>
       </MetricsGrid>
@@ -234,43 +271,6 @@ const Dashboard = ({ datasets, processedData }) => {
           </ChartContainer>
         )}
 
-        {/* Military Personnel Comparison - Different from Financial Intelligence */}
-        {processedData.globalComparison?.countryRankings && (
-          <ChartContainer>
-            <div className="chart-title">Top Military Personnel by Country</div>
-            <div className="chart-wrapper">
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart 
-                  data={processedData.globalComparison.countryRankings.slice(0, 8)}
-                  layout="horizontal"
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke={ArmedForcesTheme.colors.border} />
-                  <XAxis type="number" stroke={ArmedForcesTheme.colors.textSecondary} />
-                  <YAxis 
-                    dataKey="country" 
-                    type="category" 
-                    stroke={ArmedForcesTheme.colors.textSecondary}
-                    width={80}
-                  />
-                  <Tooltip 
-                    contentStyle={{
-                      backgroundColor: ArmedForcesTheme.colors.surface,
-                      border: `1px solid ${ArmedForcesTheme.colors.border}`,
-                      borderRadius: '8px',
-                      color: ArmedForcesTheme.colors.text
-                    }}
-                    formatter={(value) => [value.toLocaleString(), 'Personnel']}
-                  />
-                  <Bar 
-                    dataKey="totalPersonnel" 
-                    fill={ArmedForcesTheme.colors.navy}
-                    radius={[0, 4, 4, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </ChartContainer>
-        )}
 
         {/* Budget Allocation Trends */}
         {processedData.budgetTrends?.allocations && (
@@ -334,6 +334,42 @@ const Dashboard = ({ datasets, processedData }) => {
             </div>
           </ChartContainer>
         )}
+
+        {/* ICG Defect Analysis - removed by request */}
+
+        {/* ICG Unit Performance */}
+        {processedData.icgReports?.defectAnalysis?.defectByUnit && (
+          <ChartContainer>
+            <div className="chart-title">ICG Unit Defect Distribution</div>
+            <div className="chart-wrapper">
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={processedData.icgReports.defectAnalysis.defectByUnit.slice(0, 6)}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    dataKey="defectCount"
+                    nameKey="unit"
+                    label={({ unit, percentage }) => `${unit}: ${percentage.toFixed(1)}%`}
+                  >
+                    {processedData.icgReports.defectAnalysis.defectByUnit.slice(0, 6).map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{
+                      backgroundColor: ArmedForcesTheme.colors.surface,
+                      border: `1px solid ${ArmedForcesTheme.colors.border}`,
+                      borderRadius: '8px',
+                      color: ArmedForcesTheme.colors.text
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </ChartContainer>
+        )}
       </AnalyticsGrid>
 
       {/* Additional Analytics Visualizations */}
@@ -371,25 +407,29 @@ const Dashboard = ({ datasets, processedData }) => {
           </Col>
         )}
 
-        {/* Global Armed Forces Comparison */}
-        {processedData.globalComparison?.countryRankings && (
+        {/* Global Armed Forces Comparison - removed by request */}
+
+        {/* ICG Incident Analysis */}
+        {processedData.icgReports?.incidentAnalysis?.causeClassification && (
           <Col xs={24} lg={12}>
             <ChartContainer>
-              <div className="chart-title">Global Military Power Index</div>
+              <div className="chart-title">ICG Incident Cause Analysis</div>
               <div className="chart-wrapper">
                 <ResponsiveContainer width="100%" height={300}>
-                  <BarChart 
-                    data={processedData.globalComparison.countryRankings.slice(0, 10)}
-                    layout="horizontal"
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke={ArmedForcesTheme.colors.border} />
-                    <XAxis type="number" stroke={ArmedForcesTheme.colors.textSecondary} />
-                    <YAxis 
-                      dataKey="country" 
-                      type="category" 
-                      stroke={ArmedForcesTheme.colors.textSecondary}
-                      width={80}
-                    />
+                  <PieChart>
+                    <Pie
+                      data={processedData.icgReports.incidentAnalysis.causeClassification.slice(0, 6)}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      dataKey="count"
+                      nameKey="cause"
+                      label={({ cause, percentage }) => `${cause}: ${percentage.toFixed(1)}%`}
+                    >
+                      {processedData.icgReports.incidentAnalysis.causeClassification.slice(0, 6).map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
+                      ))}
+                    </Pie>
                     <Tooltip 
                       contentStyle={{
                         backgroundColor: ArmedForcesTheme.colors.surface,
@@ -398,10 +438,55 @@ const Dashboard = ({ datasets, processedData }) => {
                         color: ArmedForcesTheme.colors.text
                       }}
                     />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </ChartContainer>
+          </Col>
+        )}
+
+        {/* ICG Safety Overview */}
+        {processedData.icgReports?.safetyMetrics && (
+          <Col xs={24} lg={12}>
+            <ChartContainer>
+              <div className="chart-title">ICG Safety Metrics Overview</div>
+              <div className="chart-wrapper">
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart 
+                    data={[
+                      { 
+                        metric: 'Safety Index', 
+                        value: processedData.icgReports.safetyMetrics.safetyIndex,
+                        color: ArmedForcesTheme.colors.success
+                      },
+                      { 
+                        metric: 'Defect Rate', 
+                        value: processedData.icgReports.safetyMetrics.defectRate,
+                        color: ArmedForcesTheme.colors.warning
+                      },
+                      { 
+                        metric: 'Incident Rate', 
+                        value: processedData.icgReports.safetyMetrics.incidentRate,
+                        color: ArmedForcesTheme.colors.danger
+                      }
+                    ]}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke={ArmedForcesTheme.colors.border} />
+                    <XAxis dataKey="metric" stroke={ArmedForcesTheme.colors.textSecondary} />
+                    <YAxis stroke={ArmedForcesTheme.colors.textSecondary} />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: ArmedForcesTheme.colors.surface,
+                        border: `1px solid ${ArmedForcesTheme.colors.border}`,
+                        borderRadius: '8px',
+                        color: ArmedForcesTheme.colors.text
+                      }}
+                      formatter={(value) => [`${value.toFixed(1)}%`, 'Rate']}
+                    />
                     <Bar 
-                      dataKey="militaryStrength" 
-                      fill={ArmedForcesTheme.colors.navy}
-                      radius={[0, 4, 4, 0]}
+                      dataKey="value" 
+                      fill={ArmedForcesTheme.colors.accent}
+                      radius={[4, 4, 0, 0]}
                     />
                   </BarChart>
                 </ResponsiveContainer>
